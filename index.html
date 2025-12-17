@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Analytics Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #007AC1, #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        
+        .header .season-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #007AC1, #0056b3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        /* Category Sections */
+        .category {
+            margin-bottom: 50px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .category-header h2 {
+            font-size: 1.5rem;
+            color: #4ade80;
+        }
+        
+        .category-header .count {
+            background: #333;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+        
+        /* Dashboard Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        /* Dashboard Card */
+        .card {
+            background: linear-gradient(135deg, #16213e 0%, #1a2744 100%);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid #2a3a5a;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #007AC1;
+            box-shadow: 0 10px 40px rgba(0, 122, 193, 0.2);
+        }
+        
+        .card.coming-soon {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .card.coming-soon::after {
+            content: 'COMING SOON';
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: #f59e0b;
+            color: #000;
+            padding: 5px 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            transform: rotate(45deg);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .card-description {
+            font-size: 0.9rem;
+            color: #aaa;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+        
+        .card-modules {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #4ade80;
+        }
+        
+        .card-modules .dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+        }
+        
+        .card-arrow {
+            color: #007AC1;
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover .card-arrow {
+            transform: translateX(5px);
+        }
+        
+        /* Module Tags */
+        .module-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .module-tag {
+            background: rgba(0, 122, 193, 0.2);
+            color: #60a5fa;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+        }
+        
+        .footer .update-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .footer .update-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .footer .update-item .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4ade80;
+        }
+        
+        .footer .update-item .status-dot.stale {
+            background: #f59e0b;
+        }
+        
+        .footer .credits {
+            color: #555;
+            font-size: 0.8rem;
+        }
+        
+        .footer .credits a {
+            color: #007AC1;
+            text-decoration: none;
+        }
+        
+        .footer .credits a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🏀 NBA Analytics Hub</h1>
+            <p class="subtitle">Beyond the Box Score</p>
+            <span class="season-badge">2025-26 Season</span>
+        </header>
+        
+        <!-- Team Analysis Category -->
+        <section class="category">
+            <div class="category-header">
+                <h2>📊 Team Analysis</h2>
+                <span class="count">2 dashboards</span>
+            </div>
+            <div class="cards-grid">
+                <!-- Point Differential Dashboard -->
+                <a href="nba_unified_dashboard.html" class="card">
+                    <div class="card-icon">📈</div>
+                    <h3 class="card-title">Point Differential Analysis</h3>
+                    <p class="card-description">
+                        Comprehensive game flow analysis including win probability heatmaps, 
+                        scoring runs, comebacks, clutch time performance, and timeout patterns.
+                    </p>
+                    <div class="module-tags">
+                        <span class="module-tag">Win Probability</span>
+                        <span class="module-tag">Clutch Time</span>
+                        <span class="module-tag">Scoring Runs</span>
+                        <span class="module-tag">Timeouts</span>
+                    </div>
+                    <div class="card-meta">
+                        <span class="card-modules">
+                            <span class="dot"></span>
+                            13 modules
+                        </span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </a>
+                
+                <!-- Win Probability Swings -->
+                <a href="wp_swings_dashboard.html" class="card">
+                    <div class="card-icon">🎢</div>
+                    <h3 class="card-title">Win Probability Swings</h3>
+                    <p class="card-description">
+                        Track the most dramatic momentum shifts in games. Identify clutch 
+                        performers and measure game excitement through WP volatility.
+                    </p>
+                    <div class="module-tags">
+                        <span class="module-tag">Clutch Leaderboard</span>
+                        <span class="module-tag">Excitement Index</span>
+                        <span class="module-tag">Swing Distribution</span>
+                    </div>
+                    <div class="card-meta">
+                        <span class="card-modules">
+                            <span class="dot"></span>
+                            4 modules
+                        </span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+        
+        <!-- Player Analysis Category -->
+        <section class="category">
+            <div class="category-header">
+                <h2>⚡ Player Analysis</h2>
+                <span class="count">3 dashboards</span>
+            </div>
+            <div class="cards-grid">
+                <!-- Player Stats -->
+                <a href="player_stats_dashboard.html" class="card">
+                    <div class="card-icon">📋</div>
+                    <h3 class="card-title">Player Statistics</h3>
+                    <p class="card-description">
+                        Traditional and advanced metrics including IPM (Involvement Per Minute), 
+                        Ethical Hoops scoring, and Sortino-style risk-adjusted stats.
+                    </p>
+                    <div class="module-tags">
+                        <span class="module-tag">IPM</span>
+                        <span class="module-tag">Ethical Hoops</span>
+                        <span class="module-tag">Risk-Adjusted</span>
+                        <span class="module-tag">Achievements</span>
+                    </div>
+                    <div class="card-meta">
+                        <span class="card-modules">
+                            <span class="dot"></span>
+                            3 modules
+                        </span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </a>
+                
+                <!-- Player Clusters -->
+                <a href="player_clusters_dashboard.html" class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">Player Clustering</h3>
+                    <p class="card-description">
+                        Hierarchical clustering analysis revealing player archetypes. 
+                        Find statistical twins and explore similarity paths between any two players.
+                    </p>
+                    <div class="module-tags">
+                        <span class="module-tag">Dendrogram</span>
+                        <span class="module-tag">Archetypes</span>
+                        <span class="module-tag">Path Finder</span>
+                    </div>
+                    <div class="card-meta">
+                        <span class="card-modules">
+                            <span class="dot"></span>
+                            4 modules
+                        </span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </a>
+                
+                <!-- Player Network -->
+                <a href="player_graph_dashboard.html" class="card">
+                    <div class="card-icon">🕸️</div>
+                    <h3 class="card-title">Similarity Network</h3>
+                    <p class="card-description">
+                        Interactive force-directed graph showing player relationships. 
+                        Discover bridge players connecting different playstyles and communities.
+                    </p>
+                    <div class="module-tags">
+                        <span class="module-tag">Force Graph</span>
+                        <span class="module-tag">Communities</span>
+                        <span class="module-tag">Bridge Players</span>
+                    </div>
+                    <div class="card-meta">
+                        <span class="card-modules">
+                            <span class="dot"></span>
+                            4 modules
+                        </span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+        
+        <!-- Hall of Fame Category -->
+        <section class="category">
+            <div class="category-header">
+                <h2>🏆 Hall of Fame</h2>
+                <span class="count">2 dashboards</span>
+            </div>
+            <div class="cards-grid">
+                <!-- Pareto Analysis -->
+                <a href="pareto_dashboard.html" class="card">
+                    <div class="card-icon">🎖️</div>
+                    <h3 class="card-title">Pareto Analysis</h3>
+                    <p class="card-description">
+                        Identify statistically undominated performances. Current season averages, 
+                        single-game performances, and all-time greats in 3D/4D stat space.
+                    </p>
+                    <div class="module-tags">
+                        <span class="module-tag">Season Averages</span>
+                        <span class="module-tag">Game Performances</span>
+                        <span class="module-tag">All-Time 3D/4D</span>
+                        <span class="module-tag">DAG Visualization</span>
+                    </div>
+                    <div class="card-meta">
+                        <span class="card-modules">
+                            <span class="dot"></span>
+                            5 modules
+                        </span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </a>
+                
+                <!-- All-Time Game Pareto (Coming Soon) -->
+                <div class="card coming-soon">
+                    <div class="card-icon">⭐</div>
+                    <h3 class="card-title">Best Single Games All-Time</h3>
+                    <p class="card-description">
+                        Historical Pareto frontier of individual game performances. 
+                        The greatest single-game stat lines that were never dominated.
+                    </p>
+                    <div class="module-tags">
+                        <span class="module-tag">1996-2025</span>
+                        <span class="module-tag">~780K Games</span>
+                        <span class="module-tag">3D/4D/5D</span>
+                    </div>
+                    <div class="card-meta">
+                        <span class="card-modules">
+                            <span class="dot" style="background: #f59e0b;"></span>
+                            In Progress
+                        </span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="update-info">
+                <div class="update-item">
+                    <span class="status-dot"></span>
+                    <span>Last Updated: December 17, 2025</span>
+                </div>
+                <div class="update-item">
+                    <span class="status-dot"></span>
+                    <span>Data through latest games</span>
+                </div>
+            </div>
+            <p class="credits">
+                Built with NBA API & ESPN data • 
+                <a href="https://github.com" target="_blank">View on GitHub</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

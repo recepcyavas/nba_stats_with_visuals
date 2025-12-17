@@ -1,0 +1,41 @@
+# Core data science
+numpy
+pandas
+scipy
+scikit-learn
+
+# Visualization
+matplotlib
+seaborn
+plotly
+kaleido
+
+# Web scraping & requests
+requests
+beautifulsoup4
+lxml
+
+# NBA API
+nba_api
+
+# Google/YouTube API
+google-api-python-client
+
+# Graph analysis & community detection
+networkx
+python-louvain
+umap-learn
+
+# Office file generation
+python-pptx
+python-docx
+openpyxl
+xlsxwriter
+
+# Utilities
+tqdm
+pyyaml
+
+# Jupyter (optional, for local dev)
+jupyter
+ipywidgets
